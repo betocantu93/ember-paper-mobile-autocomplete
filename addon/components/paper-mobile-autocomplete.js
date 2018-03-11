@@ -1,5 +1,4 @@
 import Component from '@ember/component';
-import layout from '../templates/components/paper-mobile-autocomplete';
 import { get, set, getProperties, setProperties } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
@@ -46,7 +45,6 @@ export default Component.extend({
   /*Properties for remote filtering */
   remoteFilters: {},
   remoteSearchTextProperty: 'name',
-  include: '',
 
   //If radio, check if auto send close action
   closeOnSelect: false,
@@ -210,9 +208,8 @@ export default Component.extend({
         this.send('selectItem', item);
 
         if(get(this, 'filterLocal')){
-
           get(this, 'localItems').pushObject(item);
-
+          this._loadLocal();
         }
 
       }
@@ -436,11 +433,10 @@ export default Component.extend({
       modelName,
       store,
       _filters,
-      include,
       remoteSearchTextProperty,
       remoteFilters,
       selectedItems
-    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'include', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems');
+    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems');
 
     if( term === lastSearchText ){
       return;
@@ -458,8 +454,7 @@ export default Component.extend({
       set(this, 'isLoading', true);
 
       return store.query(modelName, {
-        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters}),
-        include: include
+        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters})
       }).then((items) => {
 
         /*
