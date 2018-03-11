@@ -1,7 +1,7 @@
 # ember-paper-mobile-autocomplete
 
 ## DEMO
-albertocantug.com/ember-paper-mobile-autocomplete/
+[Ember-paper-mobile-autocomplete DEMO](http://albertocantug.com/ember-paper-mobile-autocomplete/)
 
 This addon is a multi-purpose, radio/checkbox, mobile friendly autocomplete search and create form
 that mimics the behavoir of Google Calendar mobile Android version when creating an
