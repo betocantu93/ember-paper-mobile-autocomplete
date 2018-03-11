@@ -1,1 +1,176 @@
-{{yield}}
+{{#paper-dialog class="mobile-autocomplete-dialog" fullscreen=fullscreen origin=origin}}
+
+  {{#paper-toolbar class="flex-none"}}
+    {{#paper-toolbar-tools}}
+
+      {{#paper-button  bubbles=false iconButton=true onClick=(action "done")}}
+        {{paper-icon "arrow back"}}
+      {{/paper-button}}
+      <input
+        class="search-bar flex mobile-autocomplete-search-input"
+        type="text"
+        value={{searchText}}
+          autofocus=true
+        placeholder={{placeholder}}
+          oninput={{action "handleInput"}}
+
+      >
+
+      {{#if searchText}}
+        {{#paper-button class="flex-none" iconButton=true onClick=(action "clearSearchText")}}
+          {{paper-icon "close"}}
+        {{/paper-button}}
+      {{/if}}
+
+      {{#if (and showDone (not searchText) )}}
+        <div class="mobile-autocomplete-done-btn" {{action "done"}}>
+          {{doneLabel}}
+        </div>
+      {{/if}}
+
+    {{/paper-toolbar-tools}}
+
+  {{/paper-toolbar}}
+
+
+  {{#if (eq type "radio")}}
+    {{#paper-list class=(concat "flex-grow overflow-auto no-padding" (if showCreateModal " mobile-autocomplete-backdrop") ) }}
+      {{#if (and (not searchText) (gt selectedItems.length 0)) }}
+
+        {{#each selectedItems as |item| }}
+          {{#paper-item  class="md-2-line selected-item" as |controls|}}
+
+            <div class="layout flex layout-align-center-center">
+              <div class="flex-grow  md-list-item-text">
+
+                {{yield 'selected-radio' item this}}
+
+              </div>
+              <div class="flex-none">
+                {{#controls.button  iconButton=true onClick=(action "delete" item)}}
+                  {{paper-icon "close"}}
+                {{/controls.button}}
+              </div>
+            </div>
+
+
+
+          {{/paper-item}}
+
+
+        {{/each}}
+      {{/if}}
+
+      {{#if (and isLoading (not hasLoaded))}}
+        <div class="layout layout-align-center">
+          {{paper-progress-circular accent=true diameter=40}}
+        </div>
+      {{/if}}
+
+      {{#if hasLoaded}}
+        {{#each items as |item|}}
+
+          {{#paper-item onClick=(action "selectItem" item) class=(concat "md-2-line" (if isLoading " list-opacity"))}}
+
+            {{yield 'radio-list' item this}}
+
+          {{/paper-item}}
+
+          {{paper-divider}}
+        {{/each}}
+      {{/if}}
+
+    {{/paper-list}}
+  {{/if}}
+
+
+  {{#if (eq type "checkbox")}}
+    {{#paper-list class=(concat "flex overflow-auto no-padding" (if showCreateModal " mobile-autocomplete-backdrop ") ) }}
+
+      {{#each (sort-by "name" items) as |item|}}
+
+        {{#paper-item  class=(concat "md-2-line" (if isLoading " list-opacity")) as |controls|}}
+
+          <div class="md-list-item-text">
+              <span class="word-wrap diagnosis-item">
+
+                {{yield 'checkbox-list' item this}}
+
+              </span>
+
+          </div>
+
+          <div class="md-secondary-container">
+            {{controls.checkbox
+              value=(contains item selectedItems)
+              secondary=true
+              onChange=(unless (contains item selectedItems) (action "selectItem" item) (action "delete" item))}}
+          </div>
+
+        {{/paper-item}}
+        {{paper-divider}}
+      {{/each}}
+
+
+    {{/paper-list}}
+  {{/if}}
+
+
+  {{#if create}}
+
+
+
+    <div class={{concat "layout create-item-modal flex-none"}}>
+
+      {{#unless showCreateModal}}
+
+        {{#paper-dialog-actions class="flex"}}
+          <span class="flex">Can't find it?</span>
+          {{#paper-button primary=true onClick=(action "changeShowCreate" true)}}Crear{{/paper-button}}
+        {{/paper-dialog-actions}}
+      {{else}}
+
+        {{#click-outside class="flex" action=(action "changeShowCreate" false)}}
+          <div class="layout-column flex">
+
+            <div class="flex-none layout">
+              <div class="flex layout layout-align-start-center layout-padding">
+                <span class="word-wrap">{{createLabel}}</span>
+              </div>
+              <div class="flex-none layout layout-align-end-center">
+                {{#paper-button onClick=(action "changeShowCreate" false ) iconButton=true }}
+                  {{paper-icon "close"}}
+                {{/paper-button}}
+              </div>
+            </div>
+
+
+            <div class="layout flex-grow">
+              {{#if showCreateComponent}}
+
+                {{component
+                  createComponentName
+                  class="flex"
+                  searchText=searchText
+                  model=newItem
+                  onCreate=(action "onCreate")
+                }}
+
+              {{/if}}
+            </div>
+
+
+
+          </div>
+        {{/click-outside}}
+
+
+      {{/unless}}
+
+    </div>
+
+
+  {{/if}}
+
+
+{{/paper-dialog}}
