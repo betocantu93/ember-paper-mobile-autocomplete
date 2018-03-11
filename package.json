@@ -1,12 +1,22 @@
 {
   "name": "ember-paper-mobile-autocomplete",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "This addon is a multi-purpose, radio/checkbox, mobile friendly autocomplete search and create form that mimics the behavoir of Google Calendar mobile Android version when creating an event, more precisely, when adding people to the event.",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "autocomplete",
+    "search",
+    "radio",
+    "checkbox"
   ],
   "license": "MIT",
-  "author": "",
+  "author": {
+    "name": "Beto Cantu",
+    "email": "betocantu93@gmail.com"
+  },
+  "bugs": {
+    "url": "https://github.com/betocantu93/ember-paper-mobile-autocomplete/issues"
+  },
   "directories": {
     "doc": "doc",
     "test": "tests"

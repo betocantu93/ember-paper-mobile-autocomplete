@@ -49,6 +49,56 @@ Please refer to the comments in the code for more detailed explanation
 - `create`: Boolean, shows a bar fixed at bottom asking the user to create.
   - `createComponentName`: Name of the component to be rendered inside the creation area
   - `newItem`: Record to be created.
+ 
+
+## Rendering
+
+The component will yields |section item component|
+
+In section you will get feedback of where exactly this item is being rendered, for any custom rendering logic.
+
+Available sections: 
+  -selected-radio
+  -radio-list
+  -checkbox-list
+ 
+In the item you will get the model record so you can display it as you like, it's surrounded by a `{{#paper-item}}` though
+
+Component is just the mere component, maybe it's not a good idea, but for now I'll leave it there.
+
+Rendering example:
+
+
+    {{#paper-mobile-autocomplete
+      modelName='user'
+      onClose=(action "onClose")
+      onChange=(action (mut selectedItems))
+      selectedItems=selectedItems
+      preload=true
+      doneLabel="DONE"
+      type="radio"
+      filterFunc=filterFunc
+      create=true
+      filterLocal=true
+      preliminaryFilterFunc=preliminaryFilterFunc
+      as |section item component|
+    }}
+
+      <div class="md-list-item-text">
+        <span class="word-wrap">
+  
+          {{paper-autocomplete-highlight
+            label=item.name
+            searchText=component.searchText
+            flags="i"}}
+  
+        </span>
+  
+      </div>
+
+    {{/paper-mobile-autocomplete}}
+    
+    
 
 ## Filter modes
 
