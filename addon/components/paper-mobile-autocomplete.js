@@ -1,4 +1,6 @@
 import Component from '@ember/component';
+import layout from '../templates/components/paper-mobile-autocomplete';
+
 import { get, set, getProperties, setProperties } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
@@ -11,6 +13,7 @@ const DEBOUNCE_MS = 250;
 
 export default Component.extend({
 
+  layout,
   store: service(),
 
   classNames: ['mobile-autocomplete'],
@@ -86,7 +89,9 @@ export default Component.extend({
   localItems: A([]),
 
   /*
-    Function to filter subsequent local records
+
+    Function that filter local records
+
     you need to provide yours.
 
     @param  model  item  Current model record
@@ -162,7 +167,9 @@ export default Component.extend({
     let items = store.peekAll(modelName);
 
     let localItems = items.filter( (item) => {
+
       return get(this, 'preliminaryFilterFunc')(item, items);
+
     });
 
     set(this, 'localItems', localItems);
@@ -208,8 +215,10 @@ export default Component.extend({
         this.send('selectItem', item);
 
         if(get(this, 'filterLocal')){
+
           get(this, 'localItems').pushObject(item);
           this._loadLocal();
+
         }
 
       }
