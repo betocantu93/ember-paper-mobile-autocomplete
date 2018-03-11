@@ -7,15 +7,11 @@ This addon is a multi-purpose, radio/checkbox, mobile friendly autocomplete sear
 that mimics the behavoir of Google Calendar mobile Android version when creating an
 event, more precisely, when adding people to the event.
 
-<img href="http://albertocantug.com/ember-paper-mobile-autocomplete/1.png" width="40%">
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/2.png | width=48)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/3.png | width=48)
+
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/1.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/2.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/3.png)
 ![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/4.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/5.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/6.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/7.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/8.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/9.png)
 
 ## Installation
 
