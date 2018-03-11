@@ -1,6 +1,7 @@
 {
   "name": "ember-paper-mobile-autocomplete",
   "version": "0.0.1",
+<<<<<<< HEAD
   "description": "This addon is a multi-purpose, radio/checkbox, mobile friendly autocomplete search and create form that mimics the behavoir of Google Calendar mobile Android version when creating an event, more precisely, when adding people to the event.",
   "keywords": [
     "ember-addon",
@@ -17,6 +18,21 @@
   "bugs": {
     "url": "https://github.com/betocantu93/ember-paper-mobile-autocomplete/issues"
   },
+=======
+  "description": "This is an addon on top of https://miguelcobain.github.io/ember-paper/",
+  "keywords": [
+    "ember-addon",
+    "autocomplete",
+    "select",
+    "radio",
+    "checkbox",
+    "responsive",
+    "modal",
+    "ember-paper"
+  ],
+  "license": "MIT",
+  "author": "Beto Cantu",
+>>>>>>> 4d0aa23c06830ec0993bc875f38f9da7ff9ae38f
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -29,10 +45,15 @@
   },
   "dependencies": {
     "ember-cli-babel": "^6.6.0",
+<<<<<<< HEAD
     "ember-cli-htmlbars": "^2.0.1",
     "ember-composable-helpers": "^2.1.0",
     "ember-truth-helpers": "^2.0.0",
     "ember-click-outside": "^0.1.12"
+=======
+    "ember-composable-helpers": "^2.1.0",
+    "ember-truth-helpers": "^2.0.0"
+>>>>>>> 4d0aa23c06830ec0993bc875f38f9da7ff9ae38f
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
