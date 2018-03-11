@@ -1,12 +1,19 @@
 {
   "name": "ember-paper-mobile-autocomplete",
-  "version": "0.0.0",
-  "description": "The default blueprint for ember-cli addons.",
+  "version": "0.0.1",
+  "description": "This is an addon on top of https://miguelcobain.github.io/ember-paper/",
   "keywords": [
-    "ember-addon"
+    "ember-addon",
+    "autocomplete",
+    "select",
+    "radio",
+    "checkbox",
+    "responsive",
+    "modal",
+    "ember-paper"
   ],
   "license": "MIT",
-  "author": "",
+  "author": "Beto Cantu",
   "directories": {
     "doc": "doc",
     "test": "tests"
@@ -18,7 +25,9 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "ember-cli-babel": "^6.6.0"
+    "ember-cli-babel": "^6.6.0",
+    "ember-composable-helpers": "^2.1.0",
+    "ember-truth-helpers": "^2.0.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",

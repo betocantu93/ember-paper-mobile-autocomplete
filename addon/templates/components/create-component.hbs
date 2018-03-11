@@ -1,0 +1,47 @@
+{{#paper-form class="layout-column layout-padding" onSubmit=(action "addUser") as |form|}}
+  {{#paper-dialog-content class="layout flex"}}
+    <h2 class="md-title">What are the physician attributes?</h2>
+    <p>Remember to provide the email</p>
+
+    {{form.input
+
+      label="Name"
+      class="flex"
+      required=true
+      autofocus=true
+      value=model.name
+      errorMessages=(hash
+        required="Enter the name."
+      )
+      onChange=(action (mut model.name))
+    }}
+    {{form.input
+      label="Email"
+      class="flex"
+      required=true
+      value=model.email
+      errorMessages=(hash
+        required="Enter the email."
+      )
+      onChange=(action (mut model.email))
+    }}
+    {{form.input
+      label="Mobile"
+      class="flex"
+      value=model.phone
+      type="number"
+      onChange=(action (mut model.phone))
+    }}
+
+  {{/paper-dialog-content}}
+
+  {{#paper-dialog-actions class="layout-row"}}
+    <span class="flex"></span>
+    {{#unless isLoading}}
+      {{#paper-button primary=true onTap=(action onCreate false)}}Cancel{{/paper-button}}
+      {{#form.submit-button disabled=(or form.isInvalid isLoading) raised=true primary=true}}Create{{/form.submit-button}}
+    {{else}}
+      {{paper-progress-circular}}
+    {{/unless}}
+  {{/paper-dialog-actions}}
+{{/paper-form}}
