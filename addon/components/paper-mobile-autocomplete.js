@@ -11,7 +11,7 @@ import { assert } from '@ember/debug';
 const DEBOUNCE_MS = 250;
 
 export default Component.extend({
-  layout,
+
   store: service(),
 
   classNames: ['mobile-autocomplete'],
@@ -46,6 +46,7 @@ export default Component.extend({
   /*Properties for remote filtering */
   remoteFilters: {},
   remoteSearchTextProperty: 'name',
+  include: '',
 
   //If radio, check if auto send close action
   closeOnSelect: false,
@@ -87,7 +88,7 @@ export default Component.extend({
   localItems: A([]),
 
   /*
-    Function that filter local records
+    Function to filter subsequent local records
     you need to provide yours.
 
     @param  model  item  Current model record
@@ -96,6 +97,21 @@ export default Component.extend({
 
   */
   filterFunc: (item, items, searchText) => {
+    return true;
+  },
+
+  /*
+    Function for preliminary filter this model in the store,
+    useful if you want to work with a subset of records,
+    for example, all users with scope 5.
+
+    you need to provide yours.
+
+    @param  model  item  Current model record
+    @param  array  items  Array of models
+
+  */
+  preliminaryFilterFunc: (item, items) => {
     return true;
   },
 
@@ -148,7 +164,7 @@ export default Component.extend({
     let items = store.peekAll(modelName);
 
     let localItems = items.filter( (item) => {
-      return get(this, 'filterFunc')(item, items, null);
+      return get(this, 'preliminaryFilterFunc')(item, items);
     });
 
     set(this, 'localItems', localItems);
@@ -228,7 +244,6 @@ export default Component.extend({
       setProperties(this, {
         searchText: null,
         showDone: false,
-        items: null
       });
       next(() => {
         set(this, 'showDone', true);
@@ -357,6 +372,8 @@ export default Component.extend({
       return;
     }
 
+    let filteredItems;
+
     if(!isBlank(term)){
 
       yield timeout(DEBOUNCE_MS);
@@ -419,10 +436,11 @@ export default Component.extend({
       modelName,
       store,
       _filters,
+      include,
       remoteSearchTextProperty,
       remoteFilters,
       selectedItems
-    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems');
+    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'include', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems');
 
     if( term === lastSearchText ){
       return;
@@ -440,7 +458,8 @@ export default Component.extend({
       set(this, 'isLoading', true);
 
       return store.query(modelName, {
-        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters})
+        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters}),
+        include: include
       }).then((items) => {
 
         /*
