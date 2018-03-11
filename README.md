@@ -1,7 +1,7 @@
 # ember-paper-mobile-autocomplete
 
 ## DEMO
-albertocantug.com/ember-paper-autocomplete
+glib-friend.surge.sh (for the moment)
 
 This addon is a multi-purpose, radio/checkbox, mobile friendly autocomplete search and create form
 that mimics the behavoir of Google Calendar mobile Android version when creating an
