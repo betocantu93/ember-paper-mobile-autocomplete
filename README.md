@@ -28,6 +28,10 @@ Please refer to the comments in the code for more detailed explanation
 
 ### Index:
 
+- `itemHeight`: In order for the virtual scrolling to work smoothly, you must provide an itemHeight
+otherwise the view will flicker, this is a known downside for 60 fps scrolling, just make sure all your items have the same height,
+you can get this height by inspecting the dom in any browser with dev tools.
+
 -  `onClose`: Function, you must provide a callback for closing or doing something when the user wants to close
 
 - `modelName`: String, The model the component will be interacting 

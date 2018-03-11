@@ -24,6 +24,12 @@ export default Component.extend({
 
   fullscreen: true,
   doneLabel: 'DONE',
+  autofocus: true,
+
+  /*You must provide this, otherwise the view will flicker, it's a downside to 60 fps scrolling
+  * You can calculate the itemHeight by just inspecting an item, please do try to make them all the same height.
+  * */
+  itemHeight: 72,
 
   /*
   * This is the main property of this component, since we will be filtering and creating around this model
@@ -125,6 +131,8 @@ export default Component.extend({
   * */
   onError(json){},
 
+
+
   /* Validations and preloading items */
   didInsertElement(){
 
@@ -137,13 +145,29 @@ export default Component.extend({
 
     assert('You must provide a createComponentName to ember-paper-mobile-autocomplete if you want to create models', !(create && isBlank(createComponentName)));
 
+    this._setVirtualHeight();
+
+  },
+
+  /*
+  * This function is used to reset the virtualHeight for virtual repeat, it's crucial for ux.
+  * */
+  _setVirtualHeight(){
+
+    let virtualHeight = document.getElementById('paper-mobile-autocomplete-list-container').clientHeight;
+
+    let { itemHeight, type, selectedItems, searchText } = getProperties(this, 'itemHeight', 'type', 'selectedItems', 'searchText');
+
+    if(type === 'radio' && !isBlank(selectedItems) && isBlank(searchText)){
+      virtualHeight -= itemHeight;
+    }
+    set(this, 'virtualHeight', virtualHeight);
+
     if(get(this, 'preload') || get(this, 'filterLocal')){
       this._loadLocal();
     }
 
   },
-
-
   /*
 
     store.peekAll model filtered by filterFunc.
@@ -270,7 +294,7 @@ export default Component.extend({
       if(get(this, 'filterLocal')){
         this._loadLocal();
       }
-
+      this._setVirtualHeight();
       this.sendAction('onChange', selectedItems);
 
     },
@@ -282,7 +306,13 @@ export default Component.extend({
 
       set(this, 'searchText', e.target.value);
 
-      if(get(this, 'filterLocal')){
+      let { filterLocal, type } = getProperties(this, 'filterLocal', 'type');
+
+      if(type === 'radio'){
+        this._setVirtualHeight();
+      }
+
+      if(filterLocal){
         get(this, 'searchLocalModel').perform(get(this, 'searchText'));
       } else {
         get(this, 'searchRemoteModel').perform(get(this, 'searchText'));
@@ -336,9 +366,16 @@ export default Component.extend({
 
         get(this, 'onChange')(selectedItems);
 
-        if(type === 'radio' && closeOnSelect){
-          this.sendAction('onClose');
+
+        if(type === 'radio'){
+
+          this._setVirtualHeight();
+
+          if(closeOnSelect){
+            this.sendAction('onClose');
+          }
         }
+
 
       }
 

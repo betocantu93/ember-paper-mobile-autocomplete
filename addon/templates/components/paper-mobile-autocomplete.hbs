@@ -10,7 +10,7 @@
         class="search-bar flex mobile-autocomplete-search-input"
         type="text"
         value={{searchText}}
-          autofocus=true
+          autofocus={{autofocus}}
         placeholder={{placeholder}}
           oninput={{action "handleInput"}}
 
@@ -32,9 +32,10 @@
 
   {{/paper-toolbar}}
 
+  <div id="paper-mobile-autocomplete-list-container" class={{concat "flex-grow overflow-auto no-padding" (if showCreateModal " mobile-autocomplete-backdrop") }} >
 
-  {{#if (eq type "radio")}}
-    {{#paper-list class=(concat "flex-grow overflow-auto no-padding" (if showCreateModal " mobile-autocomplete-backdrop") ) }}
+    {{#if (eq type "radio")}}
+
       {{#if (and (not searchText) (gt selectedItems.length 0)) }}
 
         {{#each selectedItems as |item| }}
@@ -58,6 +59,7 @@
           {{/paper-item}}
 
 
+
         {{/each}}
       {{/if}}
 
@@ -68,24 +70,33 @@
       {{/if}}
 
       {{#if hasLoaded}}
-        {{#each items as |item|}}
 
-          {{#paper-item onClick=(action "selectItem" item) class=(concat "md-2-line" (if isLoading " list-opacity"))}}
+        {{#paper-virtual-repeat
+          items
+          height=virtualHeight
+          itemHeight=itemHeight
+        as |visibleItems|}}
 
-            {{yield 'radio-list' item this}}
+          {{#each visibleItems as |item|}}
+            {{#paper-item onClick=(action "selectItem" item) class=(concat "md-2-line" (if isLoading " list-opacity"))}}
 
-          {{/paper-item}}
+              {{yield 'radio-list' item this}}
 
-          {{paper-divider}}
-        {{/each}}
+            {{/paper-item}}
+            {{paper-divider}}
+          {{/each}}
+
+        {{/paper-virtual-repeat}}
+
+
+
       {{/if}}
 
-    {{/paper-list}}
-  {{/if}}
+
+    {{/if}}
 
 
-  {{#if (eq type "checkbox")}}
-    {{#paper-list class=(concat "flex overflow-auto no-padding" (if showCreateModal " mobile-autocomplete-backdrop ") ) }}
+    {{#if (eq type "checkbox")}}
 
       {{#each (sort-by "name" items) as |item|}}
 
@@ -111,9 +122,9 @@
         {{paper-divider}}
       {{/each}}
 
+    {{/if}}
 
-    {{/paper-list}}
-  {{/if}}
+  </div>
 
 
   {{#if create}}
