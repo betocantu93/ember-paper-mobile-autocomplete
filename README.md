@@ -8,9 +8,15 @@ that mimics the behavoir of Google Calendar mobile Android version when creating
 event, more precisely, when adding people to the event.
 
 
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/1.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/2.png)
-![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/3.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/1.png | width=48)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/2.png | width=48)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/3.png | width=48)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/4.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/5.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/6.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/7.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/8.png)
+![Showcase](http://albertocantug.com/ember-paper-mobile-autocomplete/9.png)
 
 ## Installation
 
@@ -25,7 +31,7 @@ Please refer to the comments in the code for more detailed explanation
 
 ## Usage
 
-###Index:
+### Index:
 
 -  `onClose`: Function, you must provide a callback for closing or doing something when the user wants to close or the if optionally you choose to close after select
 
@@ -49,10 +55,10 @@ Please refer to the comments in the code for more detailed explanation
   - `createComponentName`: Name of the component to be rendered inside the creation area
   - `newItem`: Record to be created.
 
-##Filter modes
+## Filter modes
 
 
-###Filter locally (peekAll):
+### Filter locally (peekAll):
 
 
 Instead of working directly with the live peekAll array, we work with a subset of records so we can apply complex cases like
@@ -99,7 +105,7 @@ Any Template
     }}
 
 
-###Filter remotely (query):
+### Filter remotely (query):
 
 This is the mode enabled by default, when the user types in, a query is made using the `modelName`, you must implement the filtering in your API, the results will be cleaned to exclude any duplicates.
 
