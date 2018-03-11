@@ -1,0 +1,1 @@
+export { default } from 'ember-paper-mobile-autocomplete/components/paper-mobile-autocomplete';
