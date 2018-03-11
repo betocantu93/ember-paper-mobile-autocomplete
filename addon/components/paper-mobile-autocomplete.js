@@ -24,12 +24,20 @@ export default Component.extend({
 
   fullscreen: true,
   doneLabel: 'DONE',
-  autofocus: true,
+  focusOnOpen: true,
+  clickOutsideToClose: false,
+  itemClass: null,
+  escapeToClose: false,
+
+  /*
+  * You can provide a sortBy property for items sorting in template
+  * */
+  sortBy: null,
 
   /*You must provide this, otherwise the view will flicker, it's a downside to 60 fps scrolling
   * You can calculate the itemHeight by just inspecting an item, please do try to make them all the same height.
   * */
-  itemHeight: 72,
+  itemHeight: 73,
 
   /*
   * This is the main property of this component, since we will be filtering and creating around this model
@@ -107,11 +115,11 @@ export default Component.extend({
   },
 
   /*
-    Function for preliminary filter this model in the store,
+    Function for preliminary filtering this model in the store,
     useful if you want to work with a subset of records,
     for example, all users with scope 5.
 
-    you need to provide yours.
+    you need to provide yours implementation
 
     @param  model  item  Current model record
     @param  array  items  Array of models
@@ -170,8 +178,8 @@ export default Component.extend({
   },
   /*
 
-    store.peekAll model filtered by filterFunc.
-    if it's radio type, removes from the items the only one at selectedItems, because it will be shown highlighted
+    store.peekAll model filtered by preliminaryFilterFunc.
+    if it's radio type, exclude selectedItems from items, because it will be shown highlighted
     at the top of the list
 
   */
@@ -203,11 +211,11 @@ export default Component.extend({
       });
       set(this, 'hasLoaded', true);
     } else {
+      set(this, 'hasLoaded', true);
       uniq = get(this, 'localItems');
     }
 
     set(this, 'items', uniq);
-
 
   },
 
@@ -221,8 +229,11 @@ export default Component.extend({
     /*
       When an item is created, it's added to selectedItems
       if there is filterLocal, this new item is added to the localItems so we can
-      keep filtering the local updated store, and also onCreate action is bubbled with (created, item) params,
-      you must bubble onCreate with true/false and with the newly created item
+      keep filtering the local updated store, and also onCreate action is bubbled with (created, item) params
+      if you want to handle it ouside the component.
+
+      For creating, you must bubble
+      onCreate from your creation component with true/false and with the newly created item
     */
 
     onCreate(created, item){
@@ -268,8 +279,22 @@ export default Component.extend({
         searchText: null,
         showDone: false,
       });
+
+      let { filterLocal, type } = getProperties(this, 'filterLocal', 'type');
+
+      if(type === 'radio') {
+        this._setVirtualHeight();
+      }
+
+      if(filterLocal){
+        get(this, 'searchLocalModel').perform(get(this, 'searchText'));
+      } else {
+        get(this, 'searchRemoteModel').perform(get(this, 'searchText'));
+      }
+
       next(() => {
         set(this, 'showDone', true);
+
       });
     },
 

@@ -1,4 +1,16 @@
-{{#paper-dialog class="mobile-autocomplete-dialog" fullscreen=fullscreen origin=origin}}
+{{#paper-dialog
+  class="mobile-autocomplete-dialog"
+  fullscreen=fullscreen
+  origin=origin
+  escapeToClose=escapeToClose
+  clickOutsideToClose=clickOutsideToClose
+  closeTo=closeTo
+  focusOnOpen=focusOnOpen
+  opaque=opaque
+  openFrom=openFrom
+  parent=parent
+  onClose=(action onClose)
+}}
 
   {{#paper-toolbar class="flex-none"}}
     {{#paper-toolbar-tools}}
@@ -10,10 +22,9 @@
         class="search-bar flex mobile-autocomplete-search-input"
         type="text"
         value={{searchText}}
-          autofocus={{autofocus}}
+          autofocus={{focusOnOpen}}
         placeholder={{placeholder}}
           oninput={{action "handleInput"}}
-
       >
 
       {{#if searchText}}
@@ -39,7 +50,7 @@
       {{#if (and (not searchText) (gt selectedItems.length 0)) }}
 
         {{#each selectedItems as |item| }}
-          {{#paper-item  class="md-2-line selected-item" as |controls|}}
+          {{#paper-item  class=(concat "md-2-line selected-item" itemClass) as |controls|}}
 
             <div class="layout flex layout-align-center-center">
               <div class="flex-grow  md-list-item-text">
@@ -55,9 +66,7 @@
             </div>
 
 
-
           {{/paper-item}}
-
 
 
         {{/each}}
@@ -72,13 +81,13 @@
       {{#if hasLoaded}}
 
         {{#paper-virtual-repeat
-          items
+          (if sortBy (sort-by sortBy items) items)
           height=virtualHeight
           itemHeight=itemHeight
         as |visibleItems|}}
 
           {{#each visibleItems as |item|}}
-            {{#paper-item onClick=(action "selectItem" item) class=(concat "md-2-line" (if isLoading " list-opacity"))}}
+            {{#paper-item onClick=(action "selectItem" item) class=(concat itemClass "md-2-line" (if isLoading " list-opacity"))}}
 
               {{yield 'radio-list' item this}}
 
@@ -98,29 +107,36 @@
 
     {{#if (eq type "checkbox")}}
 
-      {{#each (sort-by "name" items) as |item|}}
+      {{#if hasLoaded}}
+        {{#paper-virtual-repeat
+          (if sortBy (sort-by sortBy items) items)
+          height=virtualHeight
+          itemHeight=itemHeight
+        as |visibleItems|}}
 
-        {{#paper-item  class=(concat "md-2-line" (if isLoading " list-opacity")) as |controls|}}
+          {{#each visibleItems as |item|}}
 
-          <div class="md-list-item-text">
-              <span class="word-wrap diagnosis-item">
+            {{#paper-item class=(concat "md-2-line" (if isLoading " list-opacity")) as |controls|}}
 
-                {{yield 'checkbox-list' item this}}
 
-              </span>
+              {{yield 'checkbox-list' item this}}
 
-          </div>
 
-          <div class="md-secondary-container">
-            {{controls.checkbox
-              value=(contains item selectedItems)
-              secondary=true
-              onChange=(unless (contains item selectedItems) (action "selectItem" item) (action "delete" item))}}
-          </div>
+              <div class="md-secondary-container">
+                {{controls.checkbox
+                  value=(contains item selectedItems)
+                  secondary=true
+                  onChange=(unless (contains item selectedItems) (action "selectItem" item) (action "delete" item))}}
+              </div>
 
-        {{/paper-item}}
-        {{paper-divider}}
-      {{/each}}
+            {{/paper-item}}
+            {{paper-divider}}
+
+          {{/each}}
+
+        {{/paper-virtual-repeat}}
+      {{/if}}
+
 
     {{/if}}
 
