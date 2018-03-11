@@ -18,7 +18,10 @@
     "test": "ember try:each"
   },
   "dependencies": {
-    "ember-cli-babel": "^6.6.0"
+    "ember-cli-babel": "^6.6.0",
+    "ember-cli-htmlbars": "^2.0.1",
+    "ember-composable-helpers": "^2.1.0",
+    "ember-truth-helpers": "^2.0.0"
   },
   "devDependencies": {
     "broccoli-asset-rev": "^2.4.5",
