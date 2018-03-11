@@ -28,7 +28,7 @@ Please refer to the comments in the code for more detailed explanation
 
 ### Index:
 
--  `onClose`: Function, you must provide a callback for closing or doing something when the user wants to close or the if optionally you choose to close after select
+-  `onClose`: Function, you must provide a callback for closing or doing something when the user wants to close
 
 - `modelName`: String, The model the component will be interacting 
 
@@ -36,7 +36,7 @@ Please refer to the comments in the code for more detailed explanation
   - `type`: String 'radio' or 'checkbox'
     - radio: replaces selectedItem first object, every time.
       - `closeOnSelect`: Boolean that closes the modal if radio `type` is enabled 
-    - checkbox: appends to selectedItems, applying uniqBy('id') to avoid duplicates
+    - checkbox: appends to selectedItems, applying uniqBy('id') to remove duplicates
 
 - `localItems`: Array, array of subset models `modelName` returned from peekAll that will be used in all subsequent interactions when `filterLocal` is enabled
   - `preliminaryFilterFunc`: Function, callback function (item, items) called for every record returned by peekAll, must return a boolean
@@ -53,7 +53,7 @@ Please refer to the comments in the code for more detailed explanation
 
 ## Rendering
 
-The component will yields |section item component|
+The component yields |section item component|
 
 In section you will get feedback of where exactly this item is being rendered, for any custom rendering logic.
 
@@ -106,14 +106,14 @@ Rendering example:
 ### Filter locally (peekAll):
 
 
-Instead of working directly with the live peekAll array, we work with a subset of records so we can apply complex cases like
-peekAll users filtered by scope 5, so the component will always work with that subset of the store.
+Instead of working directly with the a peekAll array, we can work with a subset of records using `preliminaryFilterFunc` so we can apply complex cases like
+peekAll users filtered by scope 5, so the component will always work with that subset of records.
 
 This is accomplished by using the callback function `preliminaryFilterFunc` (suggestions accepted for renaming) which will be called for every
-record returned by peekAll with (item, items) but only in `_loadData` function which is called only at didInsertElement or when the user creates or deletes an item, ( I suppose newly created items should be in this subset, but if not, `preliminaryFilterFunc` will again make the subset)
+record returned by `modelName` peekAll with (item, items) but only in `_loadData` function which is called only at didInsertElement or when the user creates or deletes an item, ( I suppose newly created items should be in this subset, but if not, `preliminaryFilterFunc` will again make the subset)
 
 For subsequent "queries"
-You can filter the results of `localItems` by providing a callback function
+You can filter the results of `localItems` (the subset) by providing a callback function
 `filterFunc` this function will be called with (item, items, term) params for each record in `localItems`,
 so just make sure you return a bool.
 
@@ -152,12 +152,12 @@ Any Template
 
 ### Filter remotely (query):
 
-This is the mode enabled by default, when the user types in, a query is made using the `modelName`, you must implement the filtering in your API, the results will be cleaned to exclude any duplicates.
+This is the mode enabled by default, when the user types in, a query is made using the `modelName`, you must implement the filtering in your API, the results will exclude any duplicates.
 
 `onError`: Function callback when the remote query fails, it gets called with (json) so you may act accordingly
 
 Optionals:
-`remoteSearchTextProperty`: this is the key where the search term will be placed in the filter, the default is name, you can provide one of your convenience.
+`remoteSearchTextProperty`: this is the key where the search term will be placed in the filter for the query, the default is name, you can provide one of your convenience.
 `remoteFilters`: they will be appended to the query, example
 
     remoteFilters: {
@@ -182,7 +182,7 @@ Any Template
 Model Creation
 
 For showing the create bar at the bottom you need to pass `create=true`, and create a component to be rendered.
-When the user clics on create, the `createComponentName` is rendered and it gets passed down a fresh new record to be filled, so when you can assume you have a record in your template in model property, use the logic you need, and when you are done, just bubble onCreate passing a boolean meaning if the user succeed or failed, and the model if it was created
+When the user clicks on create, the `createComponentName` is rendered and it gets passed down a fresh new record to be filled, so when you can assume you have a record in your template in model property, use the logic you need, and when you are done, just bubble onCreate passing a boolean meaning if the user succeed or failed, and the model if it was created
 
 Example
 
