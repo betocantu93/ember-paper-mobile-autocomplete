@@ -177,7 +177,6 @@ export default Component.extend({
     set(this, 'virtualHeight', virtualHeight);
 
     if(get(this, 'preload') || get(this, 'filterLocal')){
-      console.log('hey');
       this._loadLocal();
     }
 
