@@ -144,6 +144,7 @@ export default Component.extend({
   /* Validations and preloading items */
   didInsertElement(){
 
+
     this._super(...arguments);
     assert('You must provide a modelName to the ember-paper-mobile-autocomplete component', !isBlank(get(this, 'modelName')));
 
@@ -152,6 +153,10 @@ export default Component.extend({
     assert('You must provide a onClose function to ember-paper-mobile-autocomplete', !isBlank(onClose));
 
     assert('You must provide a createComponentName to ember-paper-mobile-autocomplete if you want to create models', !(create && isBlank(createComponentName)));
+
+    this.resizeListener = this._setVirtualHeight.bind(this);
+
+    window.addEventListener("resize", this.resizeListener);
 
     this._setVirtualHeight();
 
@@ -172,6 +177,7 @@ export default Component.extend({
     set(this, 'virtualHeight', virtualHeight);
 
     if(get(this, 'preload') || get(this, 'filterLocal')){
+      console.log('hey');
       this._loadLocal();
     }
 
@@ -565,4 +571,8 @@ export default Component.extend({
 
   }).restartable(),
 
+  willDestroyElement(){
+    this._super(...arguments);
+    window.removeEventListener("resize", this.resizeListener);
+  }
 });
