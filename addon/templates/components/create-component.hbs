@@ -9,28 +9,28 @@
       class="flex"
       required=true
       autofocus=true
-      value=model.name
+      value=name
       errorMessages=(hash
         required="Enter the name."
       )
-      onChange=(action (mut model.name))
+      onChange=(action (mut name))
     }}
     {{form.input
       label="Email"
       class="flex"
       required=true
-      value=model.email
+      value=email
       errorMessages=(hash
         required="Enter the email."
       )
-      onChange=(action (mut model.email))
+      onChange=(action (mut email))
     }}
     {{form.input
       label="Mobile"
       class="flex"
-      value=model.phone
+      value=phone
       type="number"
-      onChange=(action (mut model.phone))
+      onChange=(action (mut phone))
     }}
 
   {{/paper-dialog-content}}
@@ -38,7 +38,7 @@
   {{#paper-dialog-actions class="layout-row"}}
     <span class="flex"></span>
     {{#unless isLoading}}
-      {{#paper-button primary=true onTap=(action onCreate false)}}Cancel{{/paper-button}}
+      {{#paper-button primary=true onClick=(action onClose false)}}Cancel{{/paper-button}}
       {{#form.submit-button disabled=(or form.isInvalid isLoading) raised=true primary=true}}Create{{/form.submit-button}}
     {{else}}
       {{paper-progress-circular}}

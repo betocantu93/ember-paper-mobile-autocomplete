@@ -4,7 +4,7 @@ import { get, set, getProperties, setProperties } from '@ember/object';
 import { isBlank } from '@ember/utils';
 import { inject as service } from '@ember/service';
 import { task, timeout } from 'ember-concurrency';
-import { next } from '@ember/runloop';
+import { next, schedule } from '@ember/runloop';
 import { A } from '@ember/array';
 import { assert } from '@ember/debug';
 
@@ -160,6 +160,8 @@ export default Component.extend({
 
     this._setVirtualHeight();
 
+    get(this, '_loadLocal').perform();
+
   },
 
   /*
@@ -168,28 +170,30 @@ export default Component.extend({
   _setVirtualHeight(){
 
     let virtualHeight = document.getElementById('paper-mobile-autocomplete-list-container').clientHeight;
+    console.log('before', virtualHeight);
 
     let { itemHeight, type, selectedItems, searchText } = getProperties(this, 'itemHeight', 'type', 'selectedItems', 'searchText');
+
 
     if(type === 'radio' && !isBlank(selectedItems) && isBlank(searchText)){
       virtualHeight -= itemHeight;
     }
+
+    console.log('after', virtualHeight);
+
     set(this, 'virtualHeight', virtualHeight);
 
-    if(get(this, 'preload') || get(this, 'filterLocal')){
-      this._loadLocal();
-    }
 
   },
   /*
 
-    store.peekAll model filtered by preliminaryFilterFunc.
+    store.peekAll(modelName) filtered by preliminaryFilterFunc.
     if it's radio type, exclude selectedItems from items, because it will be shown highlighted
     at the top of the list
 
   */
 
-  _loadLocal(){
+  _loadLocal: task(function* () {
 
     let {
       modelName,
@@ -197,6 +201,7 @@ export default Component.extend({
       store,
       selectedItems
     } = getProperties(this, 'modelName', 'type', 'store', 'selectedItems');
+
 
     let items = store.peekAll(modelName);
 
@@ -214,15 +219,17 @@ export default Component.extend({
           return i.id === item.id
         });
       });
-      set(this, 'hasLoaded', true);
     } else {
-      set(this, 'hasLoaded', true);
-      uniq = get(this, 'localItems');
+      uniq = localItems;
     }
 
-    set(this, 'items', uniq);
+    setProperties(this, {
+      hasLoaded: true,
+      items: uniq
+    });
 
-  },
+
+  }),
 
   actions: {
 
@@ -234,45 +241,36 @@ export default Component.extend({
     /*
       When an item is created, it's added to selectedItems
       if there is filterLocal, this new item is added to the localItems so we can
-      keep filtering the local updated store, and also onCreate action is bubbled with (created, item) params
-      if you want to handle it ouside the component.
+      keep filtering the localItems (subset of peekAll), and also onCreate action is bubbled with (item) params
+      if you want to do something  outside the component.
 
       For creating, you must bubble
-      onCreate from your creation component with true/false and with the newly created item
+      onCreate from your creation component the newly created item
+
     */
 
-    onCreate(created, item){
+    onCreate(item){
+
       setProperties(this, {
         showCreateModal: false,
         showCreateComponent: false
       });
-      if(created){
+
+      schedule('afterRender', () => {
         this.send('selectItem', item);
+      });
 
-        if(get(this, 'filterLocal')){
-          get(this, 'localItems').pushObject(item);
-          this._loadLocal();
-        }
-
-      }
       this.sendAction('onCreate', ...arguments);
+
     },
 
     //show / hide create modal
     changeShowCreate(flag){
 
-      let { store, modelName } = getProperties(this, 'store', 'modelName');
-      let newItem;
-
-      if(flag){
-        newItem = store.createRecord(modelName);
-      }
-
       next(() => {
         setProperties(this, {
           showCreateModal: flag,
-          showCreateComponent: flag,
-          newItem: newItem
+          showCreateComponent: flag
         });
       })
 
@@ -316,13 +314,13 @@ export default Component.extend({
     /* Removes the item from the selectedItems array, and reloads localItems via _loadLocal
      * onChange function is also called
      */
-    delete(item){
+    unselectItem(item){
 
       let selectedItems = get(this, 'selectedItems').without(item);
       set(this, 'selectedItems', selectedItems);
 
       if(get(this, 'filterLocal')){
-        this._loadLocal();
+        get(this, '_loadLocal').perform();
       }
       this._setVirtualHeight();
       this.sendAction('onChange', selectedItems);
@@ -372,7 +370,6 @@ export default Component.extend({
 
             setProperties(this, {
               selectedItems: selectedItems,
-              items: null,
               searchText: null
             });
 
@@ -397,15 +394,19 @@ export default Component.extend({
         get(this, 'onChange')(selectedItems);
 
 
-        if(type === 'radio'){
+        this._setVirtualHeight();
 
-          this._setVirtualHeight();
+        if(get(this, 'preload') || get(this, 'filterLocal')){
 
-          if(closeOnSelect){
-            this.sendAction('onClose');
-          }
+          next(()=> {
+            get(this, '_loadLocal').perform();
+          });
+
         }
 
+        if(closeOnSelect){
+          this.sendAction('onClose');
+        }
 
       }
 

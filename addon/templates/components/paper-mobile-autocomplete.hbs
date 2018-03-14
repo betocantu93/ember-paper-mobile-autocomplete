@@ -47,7 +47,7 @@
 
     {{#if (eq type "radio")}}
 
-      {{#if (and (not searchText) (gt selectedItems.length 0)) }}
+      {{#if (and (not searchText) selectedItems.length) }}
 
         {{#each selectedItems as |item| }}
           {{#paper-item  class=(concat "md-2-line selected-item" itemClass) as |controls|}}
@@ -59,15 +59,13 @@
 
               </div>
               <div class="flex-none">
-                {{#controls.button  iconButton=true onClick=(action "delete" item)}}
+                {{#controls.button  iconButton=true onClick=(action "unselectItem" item)}}
                   {{paper-icon "close"}}
                 {{/controls.button}}
               </div>
             </div>
 
-
           {{/paper-item}}
-
 
         {{/each}}
       {{/if}}
@@ -87,12 +85,14 @@
         as |visibleItems|}}
 
           {{#each visibleItems as |item|}}
+
             {{#paper-item onClick=(action "selectItem" item) class=(concat itemClass "md-2-line" (if isLoading " list-opacity"))}}
 
               {{yield 'radio-list' item this}}
 
             {{/paper-item}}
             {{paper-divider}}
+
           {{/each}}
 
         {{/paper-virtual-repeat}}
@@ -126,7 +126,7 @@
                 {{controls.checkbox
                   value=(contains item selectedItems)
                   secondary=true
-                  onChange=(unless (contains item selectedItems) (action "selectItem" item) (action "delete" item))}}
+                  onChange=(unless (contains item selectedItems) (action "selectItem" item) (action "unselectItem" item))}}
               </div>
 
             {{/paper-item}}
@@ -179,8 +179,9 @@
                   createComponentName
                   class="flex"
                   searchText=searchText
-                  model=newItem
+                  modelName=modelName
                   onCreate=(action "onCreate")
+                  onClose=(action  "changeShowCreate")
                 }}
 
               {{/if}}
