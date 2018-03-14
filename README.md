@@ -255,7 +255,7 @@ create-component.hbs
       {{#paper-dialog-actions class="layout-row"}}
         <span class="flex"></span>
         {{#unless isLoading}}
-          {{#paper-button primary=true onTap=(action onCreate false)}}Cancel{{/paper-button}}
+          {{#paper-button primary=true onClick=(action onCreate false)}}Cancel{{/paper-button}}
           {{#form.submit-button disabled=(or form.isInvalid isLoading) raised=true primary=true}}Create{{/form.submit-button}}
         {{else}}
           {{paper-progress-circular}}
