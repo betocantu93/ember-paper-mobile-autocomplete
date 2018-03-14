@@ -61,6 +61,7 @@ export default Component.extend({
   /*Properties for remote filtering */
   remoteFilters: {},
   remoteSearchTextProperty: 'name',
+  include: null,
 
   //If radio, check if auto send close action
   closeOnSelect: false,
@@ -501,8 +502,9 @@ export default Component.extend({
       _filters,
       remoteSearchTextProperty,
       remoteFilters,
-      selectedItems
-    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems');
+      selectedItems,
+      include
+    } = getProperties(this, 'lastSearchText', 'searchText', 'modelName', 'store', '_filters', 'remoteSearchTextProperty', 'remoteFilters', 'selectedItems', 'include');
 
     if( term === lastSearchText ){
       return;
@@ -519,9 +521,15 @@ export default Component.extend({
 
       set(this, 'isLoading', true);
 
-      return store.query(modelName, {
-        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters})
-      }).then((items) => {
+      let filters = {
+        filter: Object.assign(_filters, {[remoteSearchTextProperty]: term, remoteFilters}),
+      };
+
+      if(include) {
+        Object.assign(filters, { include });
+      }
+
+      return store.query(modelName, filters).then((items) => {
 
         /*
           Exclude from items returned by the query the ones in selectedItems
