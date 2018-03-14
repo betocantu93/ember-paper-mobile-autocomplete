@@ -1,7 +1,7 @@
 {
   "name": "ember-paper-mobile-autocomplete",
-  "version": "0.0.43",
-  "description": "This is an addon on top of https://miguelcobain.github.io/ember-paper/",
+  "version": "0.0.44",
+  "description": "This is radio/checkbox selector for using on top of ember-paper demo: http://albertocantug.com/ember-paper-mobile-autocomplete",
   "keywords": [
     "ember-addon",
     "autocomplete",
