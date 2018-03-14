@@ -1,6 +1,6 @@
 {
   "name": "ember-paper-mobile-autocomplete",
-  "version": "0.0.46-alpha",
+  "version": "0.0.46-alpha0-0-2",
   "description": "This is radio/checkbox selector for using on top of ember-paper demo: http://albertocantug.com/ember-paper-mobile-autocomplete",
   "keywords": [
     "ember-addon",

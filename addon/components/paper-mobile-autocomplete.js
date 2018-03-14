@@ -170,16 +170,12 @@ export default Component.extend({
   _setVirtualHeight(){
 
     let virtualHeight = document.getElementById('paper-mobile-autocomplete-list-container').clientHeight;
-    console.log('before', virtualHeight);
 
     let { itemHeight, type, selectedItems, searchText } = getProperties(this, 'itemHeight', 'type', 'selectedItems', 'searchText');
-
 
     if(type === 'radio' && !isBlank(selectedItems) && isBlank(searchText)){
       virtualHeight -= itemHeight;
     }
-
-    console.log('after', virtualHeight);
 
     set(this, 'virtualHeight', virtualHeight);
 
