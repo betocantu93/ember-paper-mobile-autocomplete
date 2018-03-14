@@ -404,7 +404,7 @@ export default Component.extend({
 
         }
 
-        if(closeOnSelect){
+        if(closeOnSelect && type === 'radio'){
           this.sendAction('onClose');
         }
 
