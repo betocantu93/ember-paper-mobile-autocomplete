@@ -21,7 +21,10 @@
     "doc": "doc",
     "test": "tests"
   },
-  "repository": "",
+    "repository": {
+    "type": "git",
+    "url": "https://github.com/betocantu93/ember-paper-mobile-autocomplete"
+  },
   "scripts": {
     "build": "ember build",
     "lint:js": "eslint ./*.js addon addon-test-support app config lib server test-support tests",
